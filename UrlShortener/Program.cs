@@ -18,7 +18,14 @@ builder.Services.AddTransient<IQrCodeService, QrCodeService>();
 
 var app = builder.Build();
 
-License.LicenseKey = builder.Configuration.GetValue<string>("IronBarcodeLicenceKey");
+var licenseKey = builder.Configuration.GetValue<string>("IronBarcodeLicenceKey");
+
+if (string.IsNullOrWhiteSpace(licenseKey))
+{
+    throw new Exception("IronBarcodeLicenceKey is required.");
+}
+
+License.LicenseKey = licenseKey;
 
 using (var scope = app.Services.CreateScope())
 {

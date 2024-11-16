@@ -25,6 +25,12 @@ public class ShortUrlService : IShortUrlService
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(url);
 
+        var existedUrl = await _repository.GetShortUrlByUrlAsync(url, ct);
+        if (existedUrl is not null)
+        {
+            return existedUrl;
+        }
+        
         var urlId = Guid.NewGuid();
         var qrCodePath = _qrCodeService.GenerateQrCode(urlId, url);
         try

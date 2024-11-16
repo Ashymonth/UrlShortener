@@ -8,6 +8,8 @@ public interface IShortUrlRepository
     Task<ShortUrl> CreateShortUrlAsync(ShortUrl url, CancellationToken ct = default);
 
     Task<ShortUrl?> GetOriginalUrlAsync(Guid tokenId, CancellationToken ct = default);
+
+    Task<ShortUrl?> GetShortUrlByUrlAsync(string url, CancellationToken ct = default);
 }
 
 public class ShortUrlRepository : IShortUrlRepository
@@ -32,5 +34,10 @@ public class ShortUrlRepository : IShortUrlRepository
     public async Task<ShortUrl?> GetOriginalUrlAsync(Guid tokenId, CancellationToken ct = default)
     {
         return await _dbContext.ShortUrls.FirstOrDefaultAsync(url => url.Id == tokenId, ct);
+    }
+
+    public async Task<ShortUrl?> GetShortUrlByUrlAsync(string url, CancellationToken ct = default)
+    {
+        return await _dbContext.ShortUrls.FirstOrDefaultAsync(shortUrl => shortUrl.OriginalUrl == url, ct);
     }
 }
